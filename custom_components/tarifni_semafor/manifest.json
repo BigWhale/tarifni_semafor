@@ -1,0 +1,15 @@
+{
+  "domain": "tarifni_semafor",
+  "name": "Tarifni Semafor",
+  "version": "1.0.0",
+  "documentation": "https://github.com/BigWhale/tarifni_semafor",
+  "dependencies": [],
+  "single_config_entry": true,
+  "integration_type": "service",
+  "codeowners": ["@BigWhale"],
+  "requirements": [],
+  "iot_class": "cloud_polling",
+  "config_flow": true,
+  "platforms": ["sensor"],
+  "loggers": ["tarifnimonitor"]
+}

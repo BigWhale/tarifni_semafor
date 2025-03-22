@@ -1,0 +1,7 @@
+{
+  "name": "Tarifni Semafor",
+  "content_in_root": false,
+  "domains": ["sensor"],
+  "country": "si",
+  "homeassistant": "2025.3.3"
+}

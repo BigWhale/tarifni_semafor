@@ -1,0 +1,10 @@
+{
+  "title": "Tarifni Semafor",
+  "config": {
+    "step": {
+      "user": {
+        "description": "This integration fetches current and next electricity tariff blocks from uro.si."
+      }
+    }
+  }
+}
