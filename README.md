@@ -71,7 +71,7 @@ Each block sensor also includes the following attributes:
 ---
 
 ## Frontend
-A custom Lovelace card for visualizing the tariff blocks is [here](https://github.com/BigWhale/tarifni_semafor).
+A custom Lovelace card for visualizing the tariff blocks is [here](https://github.com/BigWhale/tarifni_semafor_card).
 
 ## Credits
 
