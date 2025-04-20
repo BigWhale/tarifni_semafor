@@ -8,7 +8,7 @@ The integration provides sensors for:
 - Progress of current block (as a numeric sensor)
 - Season (as an enum sensor: 1 or 2)
 
-## 📦 Features
+## Features
 
 - Real-time tariff block updates
 - Progress tracking of current block
@@ -18,7 +18,7 @@ The integration provides sensors for:
 
 ---
 
-## 🛠 Installation
+## Installation
 
 ### Option 1: Install via [HACS](https://hacs.xyz/)
 1. Go to **HACS > Integrations** in Home Assistant.
@@ -46,13 +46,13 @@ The integration provides sensors for:
 
 ---
 
-## ⚙ Configuration
+## Configuration
 
 No YAML configuration is required. After installation, configure the integration through the Home Assistant UI.
 
 ---
 
-## 📈 Sensors Provided
+## Sensors Provided
 
 | Sensor                  | Description                       |
 |-------------------------|-----------------------------------|
@@ -61,23 +61,25 @@ No YAML configuration is required. After installation, configure the integration
 | `sensor.tarifni_block_progress`| Current block progress in percent |
 | `sensor.tarifni_season`        | Current season (enum: 1 or 2)     |
 
-Each block sensor also includes:
+Each block sensor also includes the following attributes:
 - `block_id`: Current or next block number
 - `block_start`: Hour in a day when block starts
 - `block_end`: Hour in a day when block ends
+- `block_total`: Total number of minutes in the block
+- `block_left`:  Number of minutes remaining in the block
 
 ---
 
-## 💡 Frontend
-A custom Lovelace card for visualizing the tariff blocks is non-existent for now. **Soon™**
+## Frontend
+A custom Lovelace card for visualizing the tariff blocks is [here](https://github.com/BigWhale/tarifni_semafor).
 
-## 🧠 Credits
+## Credits
 
 Developed for personal use and shared with the community.  
 API Source: [Agencija za energijo – URO](https://www.uro.si/aktivni-odjem/tarifni-semafor/)
 
 ---
 
-## ☕ Support
+## Support
 
 If you find this integration helpful, consider giving the repo a ⭐ on GitHub or contributing to its development.

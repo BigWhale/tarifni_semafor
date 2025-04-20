@@ -20,17 +20,20 @@ class BaseBlockSensor(CoordinatorEntity, SensorEntity):
         raise NotImplementedError
 
     @property
-    def _block_id(self: Self) -> str:
-        return self.get_block_data().get("casovniBlokId")
+    def _block_id(self: Self) -> int:
+        value = self.get_block_data().get("casovniBlokId", None)
+        return int(value) if value is not None else 0
 
     @property
     def _block_start(self: Self) -> str:
         hour = self.get_block_data().get("uraOd")
+        hour = 0 if hour == 24 else hour
         return f"{hour:02d}:00" if hour is not None else None
 
     @property
     def _block_end(self: Self) -> str:
         hour = self.get_block_data().get("uraDo")
+        hour = 0 if hour == 24 else hour
         return f"{hour:02d}:00" if hour is not None else None
 
     def calculate_progress(self: Self) -> float:
@@ -56,13 +59,37 @@ class BaseBlockSensor(CoordinatorEntity, SensorEntity):
         return "enum"
 
     @property
-    def state(self: Self) -> str:
-        return f"Block {self._block_id}"
+    def state(self: Self) -> int:
+        return self._block_id
 
     @property
     def extra_state_attributes(self: Self) -> dict[str, Any]:
+        block_total = None
+        block_left = None
+        try:
+            if self._block_start and self._block_end:
+                now = datetime.now()
+                start = datetime.strptime(self._block_start, "%H:%M").replace(
+                    year=now.year, month=now.month, day=now.day
+                )
+                end = datetime.strptime(self._block_end, "%H:%M").replace(
+                    year=now.year, month=now.month, day=now.day
+                )
+
+                if end <= start:
+                    end += timedelta(days=1)
+                if now < start:
+                    now = start
+
+                block_total = int((end - start).total_seconds() // 60)
+                block_left = max(0, int((end - now).total_seconds() // 60))
+        except Exception as e:
+            _LOGGER.warning("Failed to calculate block_total or block_left: %s", e)
+
         return {
             "block_id": self._block_id,
             "block_start": self._block_start,
             "block_end": self._block_end,
+            "block_total": block_total,
+            "block_left": block_left,
         }

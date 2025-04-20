@@ -4,6 +4,7 @@ from typing import Self, Any
 import aiohttp
 
 from datetime import datetime, timedelta
+from urllib.parse import quote
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
@@ -38,9 +39,16 @@ class TarifniSemaforCoordinator(DataUpdateCoordinator):
         """Fetch data from the Tarifni Semafor API."""
         _LOGGER.debug("Fetching data from Tarifni Semafor API")
         try:
+            timestamp_str = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+            _LOGGER.debug(f"Fetching from: {timestamp_str}")
+            encoded_timestamp = quote(timestamp_str)
+            url_with_timestamp = f"{API_URL}?timestamp={encoded_timestamp}"
+            _LOGGER.debug(f"Fetching from: {url_with_timestamp}")
+
             async with aiohttp.ClientSession() as session:
-                async with session.get(API_URL, timeout=10) as response:
+                async with session.get(url_with_timestamp, timeout=10) as response:
                     if response.status != 200:
+                        _LOGGER.debug(f"API Response: {response.status}")
                         raise UpdateFailed(f"API returned HTTP {response.status}")
                     data = await response.json()
                     _LOGGER.debug("API Response is JSON, party on.")
@@ -49,6 +57,7 @@ class TarifniSemaforCoordinator(DataUpdateCoordinator):
 
                     return data
         except Exception as err:
+            _LOGGER.debug(f"API Err: {err}")
             raise UpdateFailed(f"Error fetching data: {err}")
 
     def _schedule_next_refresh(self: Self, data: dict[str, Any]) -> None:
@@ -56,8 +65,11 @@ class TarifniSemaforCoordinator(DataUpdateCoordinator):
 
         Next refresh needs to be forced after the next block was started.
         """
+        _LOGGER.debug("Refresh called, party on.")
         block_info = data.get("casovniBlokTrenutni", {}).get("casovniBlok", {})
         hour_to = block_info.get("uraDo")
+        hour_to = 0 if hour_to == 24 else hour_to
+        _LOGGER.debug(f"Block info: {hour_to}")
         if hour_to is not None:
             now = datetime.now()
             block_end = now.replace(hour=hour_to, minute=0, second=1, microsecond=0)
