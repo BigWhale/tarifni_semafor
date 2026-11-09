@@ -2,7 +2,7 @@ import logging
 from enum import IntEnum
 from typing import Any
 
-from homeassistant.components.sensor import Entity
+from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -16,10 +16,10 @@ class Season(IntEnum):
         return {Season.LOW: "Low Season", Season.HIGH: "High Season"}[self]
 
 
-class SeasonSensor(CoordinatorEntity, Entity):
+class SeasonSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: CoordinatorEntity) -> None:
         CoordinatorEntity.__init__(self, coordinator)
-        Entity.__init__(self)
+        SensorEntity.__init__(self)
         self.coordinator = coordinator
 
     @property
